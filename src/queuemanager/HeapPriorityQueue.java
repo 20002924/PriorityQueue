@@ -41,20 +41,21 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
      * @param size
      */
     
-    private final Object[] heap;
-    private int heapsize;
-    private int heaplength;
+    //private final Object[] heap;
+    static int[] heap;
+    //private int heapsize;
+    static int heaplength;
+    private int heapIndex;
     
     public HeapPriorityQueue(int size) {
         storage = new Object[size];
+        heap = new int[size];
         capacity = size;
         tailIndex = -1;
-        heap = new Object[size];
-        heapsize = 2;
+        //heap = new Object[size];
+        //heapsize = size;
         heaplength = -1;
     }
-    
-    
     
     node heaphead;
     
@@ -78,14 +79,18 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
+            int j = 0;
+            while (j <= heaplength) {
+                System.out.print(heap[j] + " ");
+                j++;
+            }
             return ((PriorityItem<T>) storage[0]).getItem();
         }
     }
 
     @Override
     public void add(T item, int priority) throws QueueOverflowException {
-        int vr;
-        node newnode = new node(item,priority);
+        
         tailIndex = tailIndex + 1;
         heaplength = heaplength + 1;
         if (tailIndex >= capacity) {
@@ -95,45 +100,47 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
         } else {
             /* Scan backwards looking for insertion point */
             int i = tailIndex;
-            int h = heaplength;
             while (i > 0 && ((PriorityItem<T>) storage[i - 1]).getPriority() < priority) {
                 storage[i] = storage[i - 1];
                 i = i - 1;
             }
             storage[i] = new PriorityItem<>(item, priority);
             
-            if (heaphead != null) {
-            node lead = heaphead;
-            node successor = heaphead;
-            node predecessor = heaphead;
-            vr = newnode.val;
             
-            while (lead != null && vr > lead.val) {
-            System.out.print(lead.item);
-            System.out.print(predecessor.item);
-            System.out.print(vr);
-            predecessor = lead;
-            lead = lead.next;
+            int heapint = priority;
+            heap[heaplength] = heapint;
+            int parentIndex = (heapIndex - 1) / 2;
+            while (heap[parentIndex] < heap[heapIndex] && heapIndex > 0) {
+                int tempIndex = heap[parentIndex];
+                heap[parentIndex] = heap[heapIndex];
+                heap[heapIndex] = tempIndex;
+                heapIndex = parentIndex;
             }
             
-            if (newnode.val > predecessor.val) {
-            successor = predecessor.next;
-            newnode.next = successor;
-            predecessor.next = newnode;
-            }
-            
-            else {
-            newnode.next = successor;
-            heaphead = newnode;
-            }
-
-        }
-        else {
-        newnode.next = null;
-        heaphead = newnode;
-        }
             
         }
+    }
+    
+    static void nodeDown(int heapIndex) {
+        int currentIndex = heapIndex;
+            int leftside = (heapIndex * 2) + 1;
+            int rightside = (heapIndex * 2) + 2;
+            if (heap[heapIndex] < heap[leftside]) {
+                if (heaplength >= leftside) {
+                    currentIndex = leftside;
+                }
+            }
+            if (heap[heapIndex] < heap[rightside]) {
+                if (heaplength >= rightside) {
+                    currentIndex = rightside;
+                }
+            }
+            if (currentIndex != heapIndex) {
+                int temp= heap[heapIndex];
+                heap[heapIndex] = heap[currentIndex];
+                heap[currentIndex] = temp;
+                nodeDown(currentIndex);
+            }
     }
 
     @Override
@@ -146,25 +153,20 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
             }
             tailIndex = tailIndex - 1;
             
-            if (heaphead != null) {
-            node start = heaphead;
-            node hunted = heaphead;
-            node hunter = heaphead;
+            heap[heapIndex] = heap[0] + 1;
+            int parentIndex = (heapIndex - 1) / 2;
+            while (heap[parentIndex] < heap[heapIndex] && heapIndex > 0) {
+                int tempIndex = heap[parentIndex];
+                heap[parentIndex] = heap[heapIndex];
+                heap[heapIndex] = tempIndex;
+                heapIndex = parentIndex;
+            }
+            heap[0] = heap[heaplength];
+            heaplength = heaplength - 1;
+            nodeDown(heapIndex);
             
             
-            while (start != null) {
-            hunted = start;
-            start = start.next;
-            }
-            if (heaphead.next != null) {
-            while (hunter.next != hunted) {    
-            hunter = hunter.next;
-            }
-            hunter.next = null;
-            hunted.next = null;
-            hunted = null;
-            }
-            }
+            
         }
     }
 
