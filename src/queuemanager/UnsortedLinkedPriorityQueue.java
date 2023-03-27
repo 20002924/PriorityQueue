@@ -45,46 +45,153 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         capacity = size;
         tailIndex = -1;
     }
+    
+    node head;
+    //node headfirst;
+    
+    class node {
+        
+        int val;
+        node next;
+        private T item;
+ 
+        
 
-    @Override
-    public T head() throws QueueUnderflowException {
-        if (isEmpty()) {
-            throw new QueueUnderflowException();
-        } else {
-            int i = tailIndex;
-            while (((PriorityItem<T>) storage[i]).getPriority() < ((PriorityItem<T>) storage[i-1]).getPriority()) {
-                i = i - 1;
-            }
-            return ((PriorityItem<T>) storage[i]).getItem();
+        private node(T item, int priority) {
+            this.item = item;
+            this.val = priority;
         }
     }
 
     @Override
+    public T head() throws QueueUnderflowException {
+        node current = head;
+        node highest = head;
+        int gx;
+         if (head == null) {
+            throw new QueueUnderflowException();
+        }
+         else {
+        gx = head.val;
+        while(current != null){   
+                 if(gx < current.val) {  
+                     gx = current.val;
+                     highest = current;
+                 }
+                 if (gx == current.val) {
+                     highest = current;
+                 }
+                 //System.out.print(current.item);
+                 current = current.next;
+                 
+            }
+        
+        return highest.item;
+        }
+    
+            // Note: Original head of queue loop
+    }
+    
+
+
+    @Override
     public void add(T item, int priority) throws QueueOverflowException {
+        node newnode = new node(item,priority);
+        if(head == null) {  
+            head = newnode;    
+        }  
+        else {   
+            node headfirst = head;  
+            head = newnode;  
+            head.next = headfirst;  
+        }
+        
         tailIndex = tailIndex + 1;
         if (tailIndex >= capacity) {
-            /* No resizing implemented, but that would be a good enhancement. */
-            tailIndex = tailIndex - 1;
-            throw new QueueOverflowException();
+        
+        tailIndex = tailIndex - 1;
+        throw new QueueOverflowException();
         } else {
-            int i = tailIndex;
-            storage[i] = new PriorityItem<>(item, priority);
+        int i = tailIndex;
+        storage[i] = new PriorityItem<>(item, priority);
         }
+         
     }
 
     @Override
     public void remove() throws QueueUnderflowException {
-        if (isEmpty()) {
+        node imminent = head;
+        node chaser = head;
+        node delete = head;
+        node replace = head;
+        node sohigh = head;
+        node preordained = head;
+        int dm;
+        if (head == null) {
             throw new QueueUnderflowException();
-        } else {
-            //Search for and delete the highest priority item in the queue
-            int i = tailIndex;
-            while (((PriorityItem<T>) storage[i]).getPriority() < ((PriorityItem<T>) storage[i-1]).getPriority()) {
-                i = i - 1;
-                storage[i] = storage[i + 1];
-            }
-            tailIndex = tailIndex - 1;
         }
+        else {
+            dm = head.val;
+        
+            // Note: Original node replace
+            
+            while(imminent != null){   
+                 if(dm < imminent.val) {
+                     
+                     dm = imminent.val;
+                     sohigh = imminent;
+                 }
+                 if (dm == imminent.val) {
+                     sohigh = imminent;
+                 }
+                 preordained = imminent;
+                 imminent = imminent.next;  
+            }
+            
+        // Start or middle of linked list
+        if (sohigh.next != null && sohigh != head) {
+            while (chaser.next != sohigh) {
+                chaser = chaser.next;
+            }
+            chaser.next = sohigh.next;
+            sohigh.next = null;
+            sohigh = null;
+        }
+        // End of linked list
+        else if (sohigh.next == null && head.next != null) {
+            while (chaser.next != sohigh) {
+                chaser = chaser.next;
+            }
+            chaser.next = null;
+            
+            sohigh = null;
+        }
+        // If highest is at start of linked list
+        if (sohigh == head) {
+           head = sohigh.next;
+           sohigh.next = null;
+           sohigh = null;
+        }
+        
+             //System.out.print(head.item);
+             //System.out.print(chaser.item);
+            int tail = 0;
+            int i = tailIndex;
+            
+            while (i > 0) {
+                
+                if (((PriorityItem<T>) storage[i]).getPriority() > ((PriorityItem<T>) storage[tail]).getPriority()) {
+                    tail = i;
+                }
+                
+                //if (((PriorityItem<T>) storage[i]).getItem() == delete.item) {
+                //    tail = i;
+                //}
+                i = i - 1;
+            }
+            storage[tail] = storage[tailIndex];
+            tailIndex = tailIndex - 1;
+    }
     }
 
     @Override

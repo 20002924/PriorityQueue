@@ -42,16 +42,14 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
      */
     
     node head;
-    node headfirst;
+    //node headfirst;
     
     class node {
         
         int val;
         node next;
         private T item;
- 
         
-
         private node(T item, int priority) {
             this.item = item;
             this.val = priority;
@@ -71,7 +69,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         
         node current = head;
         node highest = current;
-        node testlist = head;
+        //node testlist = head;
          if (head == null) {
             throw new QueueUnderflowException();
         }
@@ -148,9 +146,9 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             ds = newnode.val;
             
             while (lead != null && ds > lead.val) {
-            System.out.print(lead.item);
-            System.out.print(predecessor.item);
-            System.out.print(ds);
+            //System.out.print(lead.item);
+            //System.out.print(predecessor.item);
+            //System.out.print(ds);
             predecessor = lead;
             lead = lead.next;
             }
@@ -172,33 +170,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         head = newnode;
         }
  
-        /*
-        if (head != null) {
-            if (head.val > newnode.val) {
-            newnode.next = head;
-            
-        }
-        else if (head.val == newnode.val) {
-            
-            newnode.prev = head;
-            
-        }
-        else {
-            newnode.prev = head;
-            
-        }
-        }
-        else {
-            newnode.prev = null;
-            newnode.next = null;
-            head = newnode;
-        }
-*/
-        
-        
- 
-       
-        
+        // Note: Original Node Implementation
     }
 
     @Override
@@ -208,11 +180,16 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         } else {
             //Search for and delete the highest priority item in the queue
             int i = tailIndex;
+            if (i > 0) {
             while (((PriorityItem<T>) storage[i]).getPriority() < ((PriorityItem<T>) storage[i-1]).getPriority()) {
                 i = i - 1;
                 storage[i] = storage[i + 1];
             }
             tailIndex = tailIndex - 1;
+            }
+            else {
+                tailIndex = tailIndex - 1;
+            }
             
             
             if (head != null) {
@@ -232,6 +209,9 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             hunter.next = null;
             hunted.next = null;
             hunted = null;
+            }
+            else {
+                head = null;
             }
             }
             

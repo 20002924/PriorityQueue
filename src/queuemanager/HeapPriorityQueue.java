@@ -41,36 +41,26 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
      * @param size
      */
     
+    // Original heap implementation
+    
     //private final Object[] heap;
-    static int[] heap;
+    //static int[] heap;
     //private int heapsize;
-    static int heaplength;
-    private int heapIndex;
+    //static int heaplength;
+    //private int heapIndex;
+    private int storageIndex;
     
     public HeapPriorityQueue(int size) {
         storage = new Object[size];
-        heap = new int[size];
+        //heap = new int[size];
         capacity = size;
         tailIndex = -1;
         //heap = new Object[size];
         //heapsize = size;
-        heaplength = -1;
+        //heaplength = -1;
     }
     
-    node heaphead;
-    
-    class node {
-        
-        int val;
-        node next;
-        node heapnext;
-        private T item;
-        
-        private node(T item, int priority) {
-            this.item = item;
-            this.val = priority;
-        }
-    }
+    // Note: original node class
     
     
 
@@ -79,11 +69,7 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
-            int j = 0;
-            while (j <= heaplength) {
-                System.out.print(heap[j] + " ");
-                j++;
-            }
+            // Note: Heap testing method
             return ((PriorityItem<T>) storage[0]).getItem();
         }
     }
@@ -92,7 +78,7 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
     public void add(T item, int priority) throws QueueOverflowException {
         
         tailIndex = tailIndex + 1;
-        heaplength = heaplength + 1;
+        //heaplength = heaplength + 1;
         if (tailIndex >= capacity) {
             /* No resizing implemented, but that would be a good enhancement. */
             tailIndex = tailIndex - 1;
@@ -100,46 +86,41 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
         } else {
             /* Scan backwards looking for insertion point */
             int i = tailIndex;
-            while (i > 0 && ((PriorityItem<T>) storage[i - 1]).getPriority() < priority) {
-                storage[i] = storage[i - 1];
-                i = i - 1;
-            }
+            
             storage[i] = new PriorityItem<>(item, priority);
             
-            
-            int heapint = priority;
-            heap[heaplength] = heapint;
-            int parentIndex = (heapIndex - 1) / 2;
-            while (heap[parentIndex] < heap[heapIndex] && heapIndex > 0) {
-                int tempIndex = heap[parentIndex];
-                heap[parentIndex] = heap[heapIndex];
-                heap[heapIndex] = tempIndex;
-                heapIndex = parentIndex;
+            storageIndex = tailIndex;
+            //int parentstorageIndex = (storageIndex - 1) / 2;
+            while (((PriorityItem<T>) storage[(storageIndex - 1) / 2]).getPriority() < ((PriorityItem<T>) storage[storageIndex]).getPriority() && storageIndex > 0) {
+                Object tempIndex = storage[(storageIndex - 1) / 2];
+                storage[(storageIndex - 1) / 2] = storage[storageIndex];
+                storage[storageIndex] = tempIndex;
+                storageIndex = (storageIndex - 1) / 2;
             }
+
+            // Note: original heap add
             
             
         }
     }
     
-    static void nodeDown(int heapIndex) {
-        int currentIndex = heapIndex;
-            int leftside = (heapIndex * 2) + 1;
-            int rightside = (heapIndex * 2) + 2;
-            if (heap[heapIndex] < heap[leftside]) {
-                if (heaplength >= leftside) {
-                    currentIndex = leftside;
-                }
+    // Note: original node down
+    
+    public void nodeshiftDown(int storageDown) {
+        int currentIndex = storageDown;
+            int leftside = (0 * 2) + 1;
+            int rightside = (0 * 2) + 2;
+            if (((PriorityItem<T>) storage[currentIndex]).getPriority() < ((PriorityItem<T>) storage[leftside]).getPriority() && tailIndex >= leftside) {
+                currentIndex = leftside;
             }
-            if (heap[heapIndex] < heap[rightside]) {
-                if (heaplength >= rightside) {
-                    currentIndex = rightside;
-                }
+            if (((PriorityItem<T>) storage[currentIndex]).getPriority() < ((PriorityItem<T>) storage[rightside]).getPriority() && tailIndex >= rightside) {
+                currentIndex = rightside;
             }
-            if (currentIndex != heapIndex) {
-                int temp= heap[heapIndex];
-                heap[heapIndex] = heap[currentIndex];
-                heap[currentIndex] = temp;
-                nodeDown(currentIndex);
+            if (currentIndex != storageDown) {
+                Object downIndex = storage[storageDown];
+                storage[storageDown] = storage[currentIndex];
+                storage[currentIndex] = downIndex;
+                nodeshiftDown(currentIndex);
             }
     }
 
@@ -148,23 +129,20 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
-            for (int i = 0; i < tailIndex; i++) {
-                storage[i] = storage[i + 1];
+            
+            
+            storageIndex = tailIndex;
+            while (((PriorityItem<T>) storage[(storageIndex - 1) / 2]).getPriority() < ((PriorityItem<T>) storage[storageIndex]).getPriority() && storageIndex > 0) {
+                Object tempIndex = storage[(storageIndex - 1) / 2];
+                storage[(storageIndex - 1) / 2] = storage[storageIndex];
+                storage[storageIndex] = tempIndex;
+                storageIndex = (storageIndex - 1) / 2;
             }
+            storage[0] = storage[tailIndex];
             tailIndex = tailIndex - 1;
-            
-            heap[heapIndex] = heap[0] + 1;
-            int parentIndex = (heapIndex - 1) / 2;
-            while (heap[parentIndex] < heap[heapIndex] && heapIndex > 0) {
-                int tempIndex = heap[parentIndex];
-                heap[parentIndex] = heap[heapIndex];
-                heap[heapIndex] = tempIndex;
-                heapIndex = parentIndex;
-            }
-            heap[0] = heap[heaplength];
-            heaplength = heaplength - 1;
-            nodeDown(heapIndex);
-            
+            nodeshiftDown(0);
+           
+            // Note: original deletion method
             
             
         }

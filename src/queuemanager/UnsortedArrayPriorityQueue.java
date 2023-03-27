@@ -35,8 +35,8 @@ public class UnsortedArrayPriorityQueue<T> implements PriorityQueue<T> {
 
     @Override
     public T head() throws QueueUnderflowException {
-        int arc;
-        int arcv;
+        //int arc;
+        //int arcv;
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
@@ -113,8 +113,7 @@ public class UnsortedArrayPriorityQueue<T> implements PriorityQueue<T> {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
-            //Search for and delete the highest priority item in the queue
-            int xyz = tailIndex;
+            //int xyz = tailIndex;
             
             int tail = 0;
             int i = tailIndex;
