@@ -89,6 +89,7 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
             
             storage[i] = new PriorityItem<>(item, priority);
             
+            // This storage method determines where in the heap the new item goes, it does this through the left or right side formula.
             storageIndex = tailIndex;
             //int parentstorageIndex = (storageIndex - 1) / 2;
             while (((PriorityItem<T>) storage[(storageIndex - 1) / 2]).getPriority() < ((PriorityItem<T>) storage[storageIndex]).getPriority() && storageIndex > 0) {
@@ -107,15 +108,19 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
     // Note: original node down
     
     public void nodeshiftDown(int storageDown) {
+        // This method is used to shift down the items in the heap.
         int currentIndex = storageDown;
             int leftside = (0 * 2) + 1;
             int rightside = (0 * 2) + 2;
+            // Used to check for left side value and compare.
             if (((PriorityItem<T>) storage[currentIndex]).getPriority() < ((PriorityItem<T>) storage[leftside]).getPriority() && tailIndex >= leftside) {
                 currentIndex = leftside;
             }
+            // Used to check for right side value and compare.
             if (((PriorityItem<T>) storage[currentIndex]).getPriority() < ((PriorityItem<T>) storage[rightside]).getPriority() && tailIndex >= rightside) {
                 currentIndex = rightside;
             }
+            // If there is a chance in the values it runs this nodeshiftDown again.
             if (currentIndex != storageDown) {
                 Object downIndex = storage[storageDown];
                 storage[storageDown] = storage[currentIndex];
@@ -130,7 +135,7 @@ public class HeapPriorityQueue<T> implements PriorityQueue<T> {
             throw new QueueUnderflowException();
         } else {
             
-            
+            // This method uses the similar action of the add method and searches values to find highest and lowest values.
             storageIndex = tailIndex;
             while (((PriorityItem<T>) storage[(storageIndex - 1) / 2]).getPriority() < ((PriorityItem<T>) storage[storageIndex]).getPriority() && storageIndex > 0) {
                 Object tempIndex = storage[(storageIndex - 1) / 2];

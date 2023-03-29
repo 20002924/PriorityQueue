@@ -118,6 +118,7 @@ public class UnsortedArrayPriorityQueue<T> implements PriorityQueue<T> {
             int tail = 0;
             int i = tailIndex;
             
+            // Searches for the highest priority item
             while (i > 0) {
                 if (((PriorityItem<T>) storage[i]).getPriority() > ((PriorityItem<T>) storage[tail]).getPriority()) {
                     tail = i;
@@ -136,6 +137,7 @@ public class UnsortedArrayPriorityQueue<T> implements PriorityQueue<T> {
                 
             }
             */
+            // Shifts and deletes the highest priority item
             storage[tail] = storage[tailIndex];
             tailIndex = tailIndex - 1;
             

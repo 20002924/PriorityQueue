@@ -138,13 +138,13 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             }
             storage[i] = new PriorityItem<>(item, priority);
         }
-        
+        // If there are existing nodes this code searches for the relevant place to put the new node.
         if (head != null) {
             node lead = head;
             node successor = head;
             node predecessor = head;
             ds = newnode.val;
-            
+            // Searches for the node before where new node belongs.
             while (lead != null && ds > lead.val) {
             //System.out.print(lead.item);
             //System.out.print(predecessor.item);
@@ -152,19 +152,20 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             predecessor = lead;
             lead = lead.next;
             }
-            
+            // The new node gets placed in between what will become the previous node and the next node.
             if (newnode.val > predecessor.val) {
             successor = predecessor.next;
             newnode.next = successor;
             predecessor.next = newnode;
             }
-            
+            // If the new node belongs at the head it will push the current head up to be the next node.
             else {
             newnode.next = successor;
             head = newnode;
             }
 
         }
+        // If there are no existing nodes the new node becomes the head.
         else {
         newnode.next = null;
         head = newnode;
@@ -191,13 +192,14 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
                 tailIndex = tailIndex - 1;
             }
             
-            
+            // Node deletion method.
             if (head != null) {
             node start = head;
             node hunted = head;
             node hunter = head;
             
-            
+            // This will run as long as the head exists.
+            // This code searches for high nodes.
             while (start != null) {
             hunted = start;
             start = start.next;
@@ -206,6 +208,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             while (hunter.next != hunted) {    
             hunter = hunter.next;
             }
+            // This code removes the next node from the node before the deleted node.
             hunter.next = null;
             hunted.next = null;
             hunted = null;

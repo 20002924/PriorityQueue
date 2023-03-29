@@ -72,6 +72,7 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
             throw new QueueUnderflowException();
         }
          else {
+        // The following code simply searches for the highest node.     
         gx = head.val;
         while(current != null){   
                  if(gx < current.val) {  
@@ -99,7 +100,8 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         node newnode = new node(item,priority);
         if(head == null) {  
             head = newnode;    
-        }  
+        }
+        // Due to this being an unsorted linked list the head node is the newest node added.
         else {   
             node headfirst = head;  
             head = newnode;  
@@ -108,7 +110,7 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         
         tailIndex = tailIndex + 1;
         if (tailIndex >= capacity) {
-        
+        // This code simply adds the newest item to the queue.
         tailIndex = tailIndex - 1;
         throw new QueueOverflowException();
         } else {
@@ -122,8 +124,8 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
     public void remove() throws QueueUnderflowException {
         node imminent = head;
         node chaser = head;
-        node delete = head;
-        node replace = head;
+        //node delete = head;
+        //node replace = head;
         node sohigh = head;
         node preordained = head;
         int dm;
@@ -135,6 +137,7 @@ public class UnsortedLinkedPriorityQueue<T> implements PriorityQueue<T> {
         
             // Note: Original node replace
             
+            // Imminent searches for the node for deletion.
             while(imminent != null){   
                  if(dm < imminent.val) {
                      
